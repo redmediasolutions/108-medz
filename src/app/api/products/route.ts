@@ -13,7 +13,7 @@ export async function GET(request: Request) {
       ? await getProductsByCategory(Number(category))
       : await getProducts();
 
-    return NextResponse.json(products);
+    return Response.json(products ?? []);
   } catch (error) {
     console.error("API products error:", error);
     return NextResponse.json([], { status: 500 });

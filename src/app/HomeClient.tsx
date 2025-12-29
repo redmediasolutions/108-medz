@@ -10,24 +10,27 @@ import { auth } from "@/src/lib/firebase";
 export default function HomeClient() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<number>(78);
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
 
   useEffect(() => {
     console.log("Firebase auth loaded:", auth);
-    fetchProducts(78);
+    fetchProducts(null); // ✅ load ALL products
   }, []);
 
-  const fetchProducts = async (categoryId: number) => {
+  const fetchProducts = async (categoryId: number | null) => {
     try {
-      setActiveCategory(categoryId);
       setLoading(true);
+      setActiveCategory(categoryId); // ✅ VERY IMPORTANT
 
-      const res = await fetch(`/api/products?category=${categoryId}`);
+      const url = categoryId
+        ? `/api/products?category=${categoryId}`
+        : `/api/products`;
+
+      const res = await fetch(url);
       const data = await res.json();
-
-      setProducts(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch products", error);
+      setProducts(data);
+    } catch (err) {
+      console.error("Failed to fetch products", err);
       setProducts([]);
     } finally {
       setLoading(false);
