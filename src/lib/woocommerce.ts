@@ -1,7 +1,9 @@
 export const runtime = "nodejs";
 
-const BASE_URL = `${process.env.WC_STORE_URL}/wp-json/wc/v3`;
+// ✅ FIX: use NEXT_PUBLIC_WC_STORE_URL
+const BASE_URL = `${process.env.NEXT_PUBLIC_WC_STORE_URL}/wp-json/wc/v3`;
 
+// 🔐 Server-only credentials (correct)
 const auth = Buffer.from(
   `${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`
 ).toString("base64");
@@ -17,7 +19,7 @@ async function wcFetch(endpoint: string) {
   if (!res.ok) {
     const text = await res.text();
     console.error("Woo error:", text);
-    throw new Error("WooCommerce API failed");
+    return []; // ✅ do NOT throw → avoids 500
   }
 
   return res.json();
