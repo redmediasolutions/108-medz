@@ -1,3 +1,8 @@
+console.log("ENV CHECK:", {
+  store: process.env.WC_STORE_URL,
+  key: process.env.WC_CONSUMER_KEY?.slice(0, 5),
+});
+
 import { NextResponse } from "next/server";
 import {
   getProducts,
