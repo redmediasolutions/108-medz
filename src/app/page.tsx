@@ -1,57 +1,29 @@
-"use client";
 
-import { useEffect, useState } from "react";
-import HeroSlider from "@/src/components/HeroSlider";
-import Categories from "@/src/components/Categories";
-import Products from "@/src/components/Products";
-import { categories } from "@/src/data/categories";
-import { auth } from "@/src/lib/firebase";
+import type { Metadata } from "next";
+import HomeClient from "@/src/app/HomeClient";
 
-export default function Home() {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<number>(78);
+export const metadata: Metadata = {
+  title: "108 Medz",
+  description:
+    "108Medz App offers a smarter way to save on healthcare. Discover a wide range of effective, high-quality medicines with the same active ingredients as major brands—delivered at significantly lower prices. With a focus on affordability and reliability, 108Medz ensures your well-being without compromise.",
+  openGraph: {
+    title: "108 Medz",
+    description:
+      "108Medz App offers a smarter way to save on healthcare. Discover a wide range of effective, high-quality medicines with the same active ingredients as major brands—delivered at significantly lower prices. With a focus on affordability and reliability, 108Medz ensures your well-being without compromise.",
+    url: "https://108medz.com",
+    siteName: "108 Medz",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "108 Medz",
+      },
+    ],
+    type: "website",
+  },
+};
 
-  useEffect(() => {
-    // ✅ FIREBASE TEST LOG
-    console.log("Firebase auth loaded:", auth);
-
-    // ✅ DEFAULT CATEGORY LOAD
-    fetchProducts(78);
-  }, []);
-
-  const fetchProducts = async (categoryId: number) => {
-    try {
-      setActiveCategory(categoryId);
-      setLoading(true);
-
-      const res = await fetch(
-        `/api/products?category=${categoryId}`
-      );
-
-      const data = await res.json();
-      setProducts(data);
-    } catch (error) {
-      console.error("Failed to fetch products", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <>
-      <HeroSlider />
-
-      <Categories
-        categories={categories}
-        activeCategory={activeCategory}
-        onSelect={fetchProducts}
-      />
-
-      <Products
-        products={products}
-        loading={loading}
-      />
-    </>
-  );
+export default function Page() {
+  return <HomeClient />;
 }

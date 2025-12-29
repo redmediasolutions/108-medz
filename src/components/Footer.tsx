@@ -68,7 +68,7 @@ export default function Footer() {
 
           {/* Left */}
           <p className="text-sm text-slate-400 text-center md:text-left">
-            © 2024 MediCare Plus. All rights reserved.
+            © 2026 108-Medz. All rights reserved.
           </p>
 
           {/* Center */}
@@ -78,14 +78,6 @@ export default function Footer() {
               Red Media Solutions
             </span>
           </p>
-
-          {/* Right - Social icons */}
-          <div className="flex gap-4 text-slate-400">
-            <span className="hover:text-white cursor-pointer">f</span>
-            <span className="hover:text-white cursor-pointer">𝕏</span>
-            <span className="hover:text-white cursor-pointer">◎</span>
-            <span className="hover:text-white cursor-pointer">in</span>
-          </div>
 
         </div>
       </div>

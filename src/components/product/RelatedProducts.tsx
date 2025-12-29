@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getRelatedProductsByCategory } from "@/src/lib/woocommerce";
+import { getProductImage } from "@/src/utils/getProductImage";
 
 export default async function RelatedProducts({
   product,
@@ -41,14 +42,13 @@ export default async function RelatedProducts({
               {/* IMAGE */}
               <Link href={`/products/${p.slug}`}>
                 <div className="relative h-44 mb-4 bg-white rounded-lg overflow-hidden">
-                  {p.images?.[0]?.src && (
-                    <Image
-                      src={p.images[0].src}
-                      alt={p.name}
-                      fill
-                      className="object-contain"
-                    />
-                  )}
+                  <Image
+                    src={getProductImage(p)}
+                    alt={p.name}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
                 </div>
               </Link>
 

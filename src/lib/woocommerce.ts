@@ -6,7 +6,7 @@ const auth = Buffer.from(
   `${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`
 ).toString("base64");
 
-async function wcFetch(endpoint: string) {
+export async function wcFetch(endpoint: string) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {
       Authorization: `Basic ${auth}`,
@@ -54,5 +54,12 @@ export async function getRelatedProductsByCategory(
 ) {
   return wcFetch(
     `/products?category=${categoryId}&exclude=${excludeId}&status=publish&per_page=4`
+  );
+}
+
+
+export async function searchProducts(query: string) {
+  return wcFetch(
+    `/products?search=${encodeURIComponent(query)}&status=publish&per_page=20`
   );
 }

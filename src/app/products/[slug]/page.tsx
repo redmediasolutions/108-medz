@@ -1,10 +1,59 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+
 import { getProductBySlug } from "@/src/lib/woocommerce";
 import RelatedProducts from "@/src/components/product/RelatedProducts";
 import AppDownloadCTA from "@/src/components/product/AppDownloadCTA";
 import QuantityAddToCart from "@/src/components/product/QuantityAddToCart";
+import { getProductImage } from "@/src/utils/getProductImage";
 
+/* -----------------------------------------
+   SEO: META TAGS (TITLE, DESCRIPTION, OG)
+------------------------------------------ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Product Not Found | 108 Medz",
+    };
+  }
+
+  const salt = product.meta_data?.find(
+    (m: any) => m.key === "salt_composition"
+  )?.value;
+
+  return {
+    title: product.name,
+    description: salt
+      ? `${product.name} – ${salt}. Buy online from 108 Medz.`
+      : `Buy ${product.name} online from 108 Medz.`,
+    openGraph: {
+      title: product.name,
+      description: salt
+        ? `${product.name} – ${salt}`
+        : product.name,
+      images: [
+        {
+          url:
+            product.images?.[0]?.src ||
+            "/default-product.png",
+        },
+      ],
+    },
+  };
+}
+
+/* -----------------------------------------
+   PAGE
+------------------------------------------ */
 export default async function ProductPage(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -20,20 +69,43 @@ export default async function ProductPage(props: {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      {/* TOP */}
+      {/* SEO: STRUCTURED DATA (JSON-LD) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            name: product.name,
+            image: getProductImage(product),
+            description:
+              saltComposition || product.name,
+            brand: {
+              "@type": "Brand",
+              name: "108 Medz",
+            },
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "INR",
+              price: product.price,
+              availability:
+                "https://schema.org/InStock",
+            },
+          }),
+        }}
+      />
+
+      {/* TOP SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* IMAGE */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="relative w-full h-[420px] flex items-center justify-center">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="relative w-full h-[300px] flex items-center justify-center">
             <Image
-              src={product.images?.[0]?.src || "/placeholder.png"}
+              src={getProductImage(product)}
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="
-        object-contain
-        transition-transform duration-300
-      "
+              className="object-contain"
               priority
             />
           </div>
@@ -57,20 +129,19 @@ export default async function ProductPage(props: {
 
           {saltComposition && (
             <p className="text-sm text-gray-600 mb-6">
-              <span className="font-medium">Composition:</span>{" "}
+              <span className="font-medium">
+                Composition:
+              </span>{" "}
               {saltComposition}
             </p>
           )}
 
-          {/* QTY + ADD */}
           <QuantityAddToCart product={product} />
-
-          {/* APP CTA */}
           <AppDownloadCTA />
         </div>
       </div>
 
-      {/* RELATED */}
+      {/* RELATED PRODUCTS */}
       <RelatedProducts product={product} />
     </section>
   );
