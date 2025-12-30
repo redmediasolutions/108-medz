@@ -22,20 +22,25 @@ const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
 const auth = Buffer.from(`${KEY}:${SECRET}`).toString("base64");
 
 export async function wcFetch(endpoint: string) {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: {
-      Authorization: `Basic ${auth}`,
-    },
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+      },
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("Woo API error:", text);
-    throw new Error("Woo API failed");
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Woo API error:", text);
+      throw new Error("Woo API failed");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("wcFetch error:", error);
+    throw error;
   }
-
-  return res.json();
 }
 
 export async function getProducts() {
