@@ -8,8 +8,8 @@ const SECRET = process.env.WC_CONSUMER_SECRET;
 
 
 console.log("STORE_URL:", STORE_URL);
-console.log("KEY:", KEY ? "defined" : "undefined");
-console.log("SECRET:", SECRET ? "defined" : "undefined");
+console.log("KEY:", KEY );
+console.log("SECRET:", SECRET );
 
 if (!STORE_URL || !KEY || !SECRET) {
 

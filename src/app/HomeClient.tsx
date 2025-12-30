@@ -21,7 +21,7 @@ export default function HomeClient() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      setActiveCategory(null); // ✅ reset category highlight
+      setActiveCategory(null); 
 
       const res = await fetch("/api/products");
       const data = await res.json();
