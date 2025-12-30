@@ -1,18 +1,21 @@
 export const runtime = "nodejs";
 
-const STORE_URL =
-  process.env.WC_STORE_URL ||
-  process.env.NEXT_PUBLIC_WC_STORE_URL;
+const STORE_URL = process.env.WC_STORE_URL;
+const KEY = process.env.WC_CONSUMER_KEY;
+const SECRET = process.env.WC_CONSUMER_SECRET;
 
-if (!STORE_URL) {
-  console.error("❌ WC_STORE_URL is missing");
+if (!STORE_URL || !KEY || !SECRET) {
+  console.error("WooCommerce ENV missing", {
+    STORE_URL,
+    KEY: KEY?.slice(0, 4),
+    SECRET: SECRET?.slice(0, 4),
+  });
+  throw new Error("WooCommerce env vars not set");
 }
 
 const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
 
-const auth = Buffer.from(
-  `${process.env.WC_CONSUMER_KEY}:${process.env.WC_CONSUMER_SECRET}`
-).toString("base64");
+const auth = Buffer.from(`${KEY}:${SECRET}`).toString("base64");
 
 export async function wcFetch(endpoint: string) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -24,22 +27,19 @@ export async function wcFetch(endpoint: string) {
 
   if (!res.ok) {
     const text = await res.text();
-    console.error("WooCommerce API error:", text);
-    throw new Error("Woo API failed");
+    console.error("Woo API error:", text);
+    throw new Error("WooCommerce API failed");
   }
 
   return res.json();
 }
 
-/* PRODUCTS */
 export async function getProducts() {
   return wcFetch("/products?status=publish&per_page=20");
 }
 
 export async function getProductsByCategory(categoryId: number) {
-  return wcFetch(
-    `/products?category=${categoryId}&status=publish&per_page=20`
-  );
+  return wcFetch(`/products?category=${categoryId}&status=publish&per_page=20`);
 }
 
 export async function getProductBySlug(slug: string) {

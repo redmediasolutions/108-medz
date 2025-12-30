@@ -14,19 +14,18 @@ export default function HomeClient() {
 
   useEffect(() => {
     console.log("Firebase auth loaded:", auth);
-    fetchProducts(null); // ✅ load ALL products initially
+    fetchProducts(); // ✅ load ALL products initially
   }, []);
 
-  const fetchProducts = async (categoryId: number | null) => {
+  // 🔥 TEMP: categoryId intentionally ignored
+  const fetchProducts = async () => {
     try {
       setLoading(true);
-      setActiveCategory(categoryId);
+      setActiveCategory(null); // ✅ reset category highlight
 
-      // ⚠️ TEMP: ignore category filtering until Woo categories are mapped
-      const url = `/api/products`;
-
-      const res = await fetch(url);
+      const res = await fetch("/api/products");
       const data = await res.json();
+
       setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to fetch products", err);
@@ -43,7 +42,7 @@ export default function HomeClient() {
       <Categories
         categories={categories}
         activeCategory={activeCategory}
-        onSelect={fetchProducts}
+        onSelect={fetchProducts} // 👈 clicks still work visually
       />
 
       <Products products={products} loading={loading} />
