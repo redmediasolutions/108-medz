@@ -14,21 +14,20 @@ export default function HomeClient() {
 
   useEffect(() => {
     console.log("Firebase auth loaded:", auth);
-    fetchProducts(null); // ✅ load ALL products
+    fetchProducts(null); // ✅ load ALL products initially
   }, []);
 
   const fetchProducts = async (categoryId: number | null) => {
     try {
       setLoading(true);
-      setActiveCategory(categoryId); // ✅ VERY IMPORTANT
+      setActiveCategory(categoryId);
 
-      const url = categoryId
-        ? `/api/products?category=${categoryId}`
-        : `/api/products`;
+      // ⚠️ TEMP: ignore category filtering until Woo categories are mapped
+      const url = `/api/products`;
 
       const res = await fetch(url);
       const data = await res.json();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to fetch products", err);
       setProducts([]);

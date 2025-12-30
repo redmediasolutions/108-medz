@@ -8,13 +8,27 @@ export default async function RelatedProducts({
 }: {
   product: any;
 }) {
-  const categoryId = product.categories?.[0]?.id;
-  if (!categoryId) return null;
+  const categoryId =
+    Array.isArray(product.categories) && product.categories.length > 0
+      ? product.categories[0].id
+      : null;
 
-  const products = await getRelatedProductsByCategory(
-    categoryId,
-    product.id
-  );
+  if (!categoryId) {
+    return null; // no category → no related products
+  }
+
+  let products = [];
+
+  try {
+    products = await getRelatedProductsByCategory(
+      categoryId,
+      product.id
+    );
+  } catch {
+    return null; // Woo API failed → silently skip
+  }
+
+  if (!products || products.length === 0) return null;
 
   if (!products || products.length === 0) return null;
 
@@ -33,11 +47,7 @@ export default async function RelatedProducts({
           return (
             <div
               key={p.id}
-              className="
-                bg-white rounded-xl shadow-sm
-                hover:shadow-md transition
-                flex flex-col p-4
-              "
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition flex flex-col p-4"
             >
               {/* IMAGE */}
               <Link href={`/products/${p.slug}`}>

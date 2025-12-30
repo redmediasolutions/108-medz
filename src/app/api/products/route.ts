@@ -1,7 +1,4 @@
-console.log("ENV CHECK:", {
-  store: process.env.WC_STORE_URL,
-  key: process.env.WC_CONSUMER_KEY?.slice(0, 5),
-});
+export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import {
@@ -10,17 +7,35 @@ import {
 } from "@/src/lib/woocommerce";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const category = searchParams.get("category");
-
   try {
-    const products = category
-      ? await getProductsByCategory(Number(category))
-      : await getProducts();
+    // ✅ ENV CHECK (safe)
+    if (!process.env.WC_STORE_URL) {
+      console.error("WC_STORE_URL missing");
+      return NextResponse.json([]);
+    }
 
-    return Response.json(products ?? []);
+    const { searchParams } = new URL(request.url);
+    const categoryParam = searchParams.get("category");
+
+    let products;
+
+    if (categoryParam) {
+      const categoryId = Number(categoryParam);
+
+      // ✅ Guard invalid category
+      if (Number.isNaN(categoryId)) {
+        return NextResponse.json([]);
+      }
+
+      products = await getProductsByCategory(categoryId);
+    } else {
+      products = await getProducts();
+    }
+
+    // ✅ Always return 200
+    return NextResponse.json(products ?? []);
   } catch (error) {
     console.error("API products error:", error);
-    return NextResponse.json([], { status: 500 });
+    return NextResponse.json([]); // ❌ no 500
   }
 }

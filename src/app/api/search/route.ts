@@ -1,5 +1,7 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
-import { wcFetch } from "@/src/lib/woocommerce";
+import { searchProducts } from "@/src/lib/woocommerce";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -10,12 +12,10 @@ export async function GET(req: Request) {
   }
 
   try {
-    const products = await wcFetch(
-      `/products?search=${encodeURIComponent(q)}&status=publish&per_page=6`
-    );
-
-    return NextResponse.json(products);
-  } catch {
+    const products = await searchProducts(q);
+    return NextResponse.json(products ?? []);
+  } catch (error) {
+    console.error("Search API error:", error);
     return NextResponse.json([], { status: 500 });
   }
 }
