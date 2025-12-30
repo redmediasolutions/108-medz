@@ -14,7 +14,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     console.log("Firebase auth loaded:", auth);
-    fetchProducts(); // ✅ load ALL products initially
+    fetchProducts(); 
   }, []);
 
   // 🔥 TEMP: categoryId intentionally ignored
