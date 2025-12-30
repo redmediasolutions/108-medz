@@ -12,11 +12,6 @@ console.error('[ENV_CHECK]', {
   SECRET: !!process.env.WC_CONSUMER_SECRET,
 });
 
-console.log("STORE_URL:", STORE_URL);
-console.log("KEY:", KEY );
-console.log("SECRET:", SECRET );
-
-
 
 if (!STORE_URL || !KEY || !SECRET) {
 
@@ -28,21 +23,6 @@ const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
 
 const auth = Buffer.from(`${KEY}:${SECRET}`).toString("base64");
 
-fetch(`${BASE_URL}/products?status=publish&per_page=5`, {
-  headers: {
-    Authorization: "Basic " + auth
-  },
-  cache: "no-store"
-}).then((response) => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-}).then((data) => {
-  console.error("Data received: ", data);
-}).catch((error) => {
-  console.error("Found the error: ", error);
-});
 
 export async function wcFetch(endpoint: string) {
   try {
@@ -87,6 +67,10 @@ export async function searchProducts(query: string) {
   return wcFetch(
     `/products?search=${encodeURIComponent(query)}&status=publish&per_page=20`
   );
+}
+
+export async function getCategories() {
+  return wcFetch("/products/categories?per_page=50");
 }
 
 export async function getRelatedProductsByCategory(

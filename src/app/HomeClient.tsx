@@ -4,31 +4,40 @@ import { useEffect, useState } from "react";
 import HeroSlider from "@/src/components/HeroSlider";
 import Categories from "@/src/components/Categories";
 import Products from "@/src/components/Products";
-import { categories } from "@/src/data/categories";
-import { auth } from "@/src/lib/firebase";
 
 export default function HomeClient() {
+  const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Firebase auth loaded:", auth);
-    fetchProducts(); 
+    fetchCategories();
+    fetchProducts(null);
   }, []);
 
-  // 🔥 TEMP: categoryId intentionally ignored
-  const fetchProducts = async () => {
+  const fetchCategories = async () => {
+    const res = await fetch("/api/categories");
+    const data = await res.json();
+    setCategories(Array.isArray(data) ? data : []);
+  };
+
+  const fetchProducts = async (category: any | null) => {
     try {
       setLoading(true);
-      setActiveCategory(null); 
+      setActiveCategory(category?.id ?? null);
 
-      const res = await fetch("/api/products");
+      let url = "/api/products";
+
+      if (category?.children?.length) {
+        url += `?category=${category.children.join(",")}`;
+      }
+
+      const res = await fetch(url);
       const data = await res.json();
 
       setProducts(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Failed to fetch products", err);
+    } catch {
       setProducts([]);
     } finally {
       setLoading(false);
@@ -38,13 +47,11 @@ export default function HomeClient() {
   return (
     <>
       <HeroSlider />
-
       <Categories
         categories={categories}
         activeCategory={activeCategory}
-        onSelect={fetchProducts} // 👈 clicks still work visually
+        onSelect={fetchProducts}
       />
-
       <Products products={products} loading={loading} />
     </>
   );
