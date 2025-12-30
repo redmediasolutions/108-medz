@@ -34,9 +34,9 @@ fetch(`${BASE_URL}/products?status=publish&per_page=5`, {
   }
   return response.json();
 }).then((data) => {
-  console.log("Data received: ", data);
+  console.error("Data received: ", data);
 }).catch((error) => {
-  console.log("Found the error: ", error);
+  console.error("Found the error: ", error);
 });
 
 export async function wcFetch(endpoint: string) {
