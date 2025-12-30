@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getProducts } from "@/src/lib/woocommerce";
-
+export const dynamic = 'force-dynamic';
 const SITE_URL = "https://108medz.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
