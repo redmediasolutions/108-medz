@@ -1,34 +1,34 @@
+// src/app/api/categories/route.ts
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { wcFetch } from "@/src/lib/woocommerce";
 
+const HOME_CATEGORIES = [
+  { name: "Respiratory", slug: "respiratory-range" },
+  { name: "Diabeties", slug: "diabeties" },
+  { name: "Cardiology", slug: "cardiology" },
+  { name: "Orthopedic", slug: "orthapaedic" },
+  { name: "Asthma", slug: "asthama" },
+  { name: "Dentist", slug: "dental" },
+  { name: "Dermatologist", slug: "dermatology" },
+];
+
 export async function GET() {
   try {
     const all = await wcFetch("/products/categories?per_page=100");
 
-    // Only real parent categories
-    const parents = all.filter(
-      (c: any) =>
-        c.parent === 0 &&
-        c.count > 0 &&
-        !["uncategorized", "admin products"].includes(
-          c.slug.toLowerCase()
-        )
-    );
-
-    const categories = parents
-      .map((parent: any) => {
-        const children = all.filter(
-          (c: any) => c.parent === parent.id && c.count > 0
+    const categories = HOME_CATEGORIES
+      .map((cfg) => {
+        const cat = all.find(
+          (c: any) => c.slug === cfg.slug
         );
 
-        if (children.length === 0) return null;
+        if (!cat) return null;
 
         return {
-          id: parent.id,
-          name: parent.name,
-          children: children.map((c: any) => c.id),
+          id: cat.id,
+          name: cfg.name,
         };
       })
       .filter(Boolean);

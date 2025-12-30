@@ -22,22 +22,21 @@ export default function HomeClient() {
     setCategories(Array.isArray(data) ? data : []);
   };
 
-  const fetchProducts = async (category: any | null) => {
+  const fetchProducts = async (categoryId: number | null) => {
     try {
       setLoading(true);
-      setActiveCategory(category?.id ?? null);
+      setActiveCategory(categoryId);
 
-      let url = "/api/products";
-
-      if (category?.children?.length) {
-        url += `?category=${category.children.join(",")}`;
-      }
+      const url = categoryId
+        ? `/api/products?category=${categoryId}`
+        : `/api/products`;
 
       const res = await fetch(url);
       const data = await res.json();
 
       setProducts(Array.isArray(data) ? data : []);
-    } catch {
+    } catch (e) {
+      console.error("Product fetch error", e);
       setProducts([]);
     } finally {
       setLoading(false);
@@ -47,11 +46,13 @@ export default function HomeClient() {
   return (
     <>
       <HeroSlider />
+
       <Categories
         categories={categories}
         activeCategory={activeCategory}
         onSelect={fetchProducts}
       />
+
       <Products products={products} loading={loading} />
     </>
   );
