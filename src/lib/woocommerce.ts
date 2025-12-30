@@ -2,9 +2,9 @@ export const runtime = "nodejs";
 
 import { Buffer } from "buffer";
 
-const STORE_URL = process.env.WC_STORE_URL;
-const KEY = process.env.WC_CONSUMER_KEY;
-const SECRET = process.env.WC_CONSUMER_SECRET;
+const STORE_URL = "https://janmanstore.in";
+const KEY = "ck_eeab0ea886d3ac1b8da281e6c4f944b7328efe34";
+const SECRET = "cs_ff2e1fe49bb29c452b9b19b85d94ce561aa55b19";
 
 
 console.log("STORE_URL:", STORE_URL);
