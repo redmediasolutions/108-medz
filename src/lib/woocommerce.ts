@@ -6,8 +6,15 @@ const STORE_URL = process.env.WC_STORE_URL;
 const KEY = process.env.WC_CONSUMER_KEY;
 const SECRET = process.env.WC_CONSUMER_SECRET;
 
+
+console.log("STORE_URL:", STORE_URL);
+console.log("KEY:", KEY ? "defined" : "undefined");
+console.log("SECRET:", SECRET ? "defined" : "undefined");
+
 if (!STORE_URL || !KEY || !SECRET) {
-  throw new Error("❌ WooCommerce environment variables missing");
+
+  throw new Error("WooCommerce environment variables missing");
+
 }
 
 const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
