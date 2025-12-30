@@ -1,24 +1,23 @@
 export const runtime = "nodejs";
 
-const BASE_URL = `${process.env.WC_STORE_URL}/wp-json/wc/v3`;
+import { Buffer } from "buffer";
 
-function getAuthHeader() {
-  const key = process.env.WC_CONSUMER_KEY;
-  const secret = process.env.WC_CONSUMER_SECRET;
+const STORE_URL = process.env.WC_STORE_URL;
+const KEY = process.env.WC_CONSUMER_KEY;
+const SECRET = process.env.WC_CONSUMER_SECRET;
 
-  if (!key || !secret) {
-    throw new Error("WooCommerce env vars missing");
-  }
-
-  // ✅ Buffer-safe for Amplify
-  const encoded = btoa(`${key}:${secret}`);
-  return `Basic ${encoded}`;
+if (!STORE_URL || !KEY || !SECRET) {
+  throw new Error("❌ WooCommerce environment variables missing");
 }
+
+const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
+
+const auth = Buffer.from(`${KEY}:${SECRET}`).toString("base64");
 
 export async function wcFetch(endpoint: string) {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     headers: {
-      Authorization: getAuthHeader(),
+      Authorization: `Basic ${auth}`,
     },
     cache: "no-store",
   });
@@ -37,7 +36,9 @@ export async function getProducts() {
 }
 
 export async function getProductsByCategory(categoryId: number) {
-  return wcFetch(`/products?category=${categoryId}&status=publish&per_page=20`);
+  return wcFetch(
+    `/products?category=${categoryId}&status=publish&per_page=20`
+  );
 }
 
 export async function getProductBySlug(slug: string) {
