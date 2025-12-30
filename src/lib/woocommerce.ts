@@ -11,6 +11,8 @@ console.log("STORE_URL:", STORE_URL);
 console.log("KEY:", KEY );
 console.log("SECRET:", SECRET );
 
+
+
 if (!STORE_URL || !KEY || !SECRET) {
 
   throw new Error("WooCommerce environment variables missing");
@@ -20,6 +22,22 @@ if (!STORE_URL || !KEY || !SECRET) {
 const BASE_URL = `${STORE_URL}/wp-json/wc/v3`;
 
 const auth = Buffer.from(`${KEY}:${SECRET}`).toString("base64");
+
+fetch(`${BASE_URL}/products?status=publish&per_page=5`, {
+  headers: {
+    Authorization: "Basic " + auth
+  },
+  cache: "no-store"
+}).then((response) => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}).then((data) => {
+  console.log("Data received: ", data);
+}).catch((error) => {
+  console.log("Found the error: ", error);
+});
 
 export async function wcFetch(endpoint: string) {
   try {
