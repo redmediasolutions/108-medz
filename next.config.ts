@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone", // ✅ REQUIRED for OpenNext
+
   images: {
     remotePatterns: [
       {
@@ -9,7 +11,7 @@ const nextConfig: NextConfig = {
         pathname: "/wp-content/uploads/**",
       },
     ],
-    unoptimized: true, // ✅ keep this
+    unoptimized: true,
   },
 };
 
