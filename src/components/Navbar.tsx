@@ -173,12 +173,6 @@ export default function Navbar() {
             🔍
           </button>
 
-          {/* ORDERS */}
-          <button className="hidden md:flex flex-col items-center text-xs text-gray-600 hover:text-primary">
-            <span>📄</span>
-            Orders
-          </button>
-
           {/* CART */}
           <button
             onClick={() => setCartOpen(true)}
@@ -202,7 +196,7 @@ export default function Navbar() {
                 className="flex flex-col items-center text-xs text-gray-600 hover:text-primary"
               >
                 <span>👤</span>
-                Profile
+                My Account
               </button>
 
               {menuOpen && (

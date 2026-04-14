@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "NEXT_DISABLE_TURBOPACK=1 next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+
+    "cf:build": "npx @opennextjs/cloudflare build",
+    "cf:preview": "npx @opennextjs/cloudflare preview",
+    "cf:deploy": "npx @opennextjs/cloudflare deploy"
   },
   "dependencies": {
     "firebase": "^12.12.0",
@@ -17,6 +21,7 @@
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.0.0", 
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19",
