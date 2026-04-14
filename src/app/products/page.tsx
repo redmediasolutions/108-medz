@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/src/components/all products/Sidebar";
 import ProductsGrid from "@/src/components/all products/ProductsGrid";
-import { categories } from "@/src/data/categories";
+import { categories } from "@/src/data/category";
 
 export default function AllProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
