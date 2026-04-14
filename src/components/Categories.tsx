@@ -1,8 +1,13 @@
 "use client";
 
+import Image from "next/image";
+
 type Category = {
   id: number;
-  name: string;
+  title1: string;
+  title2: string;
+  icon: string;
+  background: string;
 };
 
 type Props = {
@@ -11,40 +16,70 @@ type Props = {
   onSelect: (categoryId: number | null) => void;
 };
 
-export default function Categories({
+export default function CategoriesSection({
   categories,
   activeCategory,
   onSelect,
 }: Props) {
   return (
-    <section className="bg-gray-50 border-b">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
+    <section className="w-full py-6">
+      {/* Header */}
+      <div className="flex items-center justify-between px-2 mb-2">
+      </div>
 
-          {/* ALL */}
-          <button
-            onClick={() => onSelect(null)}
-            className={`px-6 py-2 rounded-full whitespace-nowrap ${
-              activeCategory === null
-                ? "bg-black text-white"
-                : "bg-white"
-            }`}
-          >
-            All
-          </button>
-
+      {/* Scroll */}
+      <div className="overflow-x-auto no-scrollbar">
+        <div className="flex gap-4 px-4 min-w-max">
           {categories.map((cat) => (
-            <button
+            <div
               key={cat.id}
               onClick={() => onSelect(cat.id)}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                activeCategory === cat.id
-                  ? "bg-black text-white"
-                  : "bg-white"
-              }`}
+              className={`flex items-center gap-4 min-w-[260px] p-4 rounded-2xl shadow-sm cursor-pointer transition ${activeCategory === cat.id
+                  ? "bg-primary text-white"
+                  : ""
+                }`}
+              style={
+                activeCategory !== cat.id
+                  ? {
+                    backgroundImage: `url(${cat.background})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                  : {}
+              }
             >
-              {cat.name}
-            </button>
+              {/* Icon */}
+              <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow overflow-hidden">
+                <Image
+                  src={cat.icon || "/images/categories/default.png"}
+                  alt={cat.title1}
+                  width={500}
+                  height={500}
+                  className="object-contain -translate-y-4"
+                />
+              </div>
+
+              {/* Text */}
+              <div>
+                <h3
+                  className={`font-semibold ${activeCategory === cat.id
+                      ? "text-white"
+                      : "text-gray-800"
+                    }`}
+                >
+                  {cat.title1}
+                </h3>
+
+                <p
+                  className={`text-sm ${activeCategory === cat.id
+                      ? "text-white/80"
+                      : "text-gray-600"
+                    }`}
+                >
+                  {cat.title2}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
