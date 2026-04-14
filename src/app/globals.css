@@ -1,26 +1,35 @@
-@import 'tailwindcss';
+/* ✅ Tailwind v4 import (REQUIRED) */
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* ================= THEME ================= */
 :root {
-  --color-primary: #09212A;
-  --color-secondary: #93C753;
+  --color-primary: #0F285F;
+  --color-secondary: #D4EAF7;
+  --color-accent: #00BFA5;
+
+  --color-bg: #F3F7FA;
+  --color-surface: #FFFFFF;
+
+  --color-text: #333333;
+  --color-muted: #666666;
 }
 
-@keyframes slide-in {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.dark {
+  --color-bg: #121212;
+  --color-surface: #1E1E1E;
+
+  --color-text: #E0E0E0;
+  --color-muted: #A0A0A0;
 }
 
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
+/* ================= BASE ================= */
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Inter, sans-serif;
 }
 
+/* Optional helpers */
+.text-muted {
+  color: var(--color-muted);
+}

@@ -2,19 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const pathname = req.nextUrl.pathname;
-
-  // Allow coming-soon page itself
-  if (pathname.startsWith("/coming-soon")) {
-    return NextResponse.next();
-  }
-
-  // Block EVERYTHING else
-  return NextResponse.redirect(
-    new URL("/coming-soon", req.url)
-  );
+  // Allow all requests without modification
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: "/((?!_next|favicon.ico).*)",
+  matcher: "/((?!_next/static|_next/image|favicon.ico).*)",
 };

@@ -117,191 +117,186 @@ export default function Navbar() {
   );
 
   return (
-    <>
-      {/* ================= HEADER ================= */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+  <>
+    {/* ================= HEADER ================= */}
+    <header className="sticky top-0 z-50 bg-secondary/50 backdrop-blur-md border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-20 gap-6">
 
-          {/* LOGO */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => router.push("/")}
-          >
+        {/* LOGO */}
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center overflow-hidden">
             <Image
               src="/108-medz logo.jpg"
               alt="108 Medz"
-              width={36}
-              height={36}
+              width={40}
+              height={40}
+              className="object-cover"
             />
-            <span
-              className="text-lg font-bold hidden sm:block"
-              style={{ color: "var(--color-primary)" }}
-            >
-              108 Medz
+          </div>
+
+          <div className="hidden sm:flex flex-col leading-tight">
+            <span className="text-lg font-bold text-primary">
+              108 MEDZ
+            </span>
+            <span className="text-xs text-gray-500 tracking-wide">
+              YOUR HEALTH PARTNER
             </span>
           </div>
+        </div>
 
-          {/* DESKTOP SEARCH */}
-          <div className="relative hidden md:block w-1/2">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search medicines..."
-              className="w-full border rounded-lg px-4 py-2 text-sm"
-              style={{ borderColor: "var(--color-primary)" }}
-            />
-            {showDropdown && <SearchDropdown />}
-          </div>
+        {/* SEARCH (DESKTOP) */}
+        <div className="relative hidden md:block flex-1 max-w-2xl">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search medicines, health products..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary outline-none shadow-sm"
+          />
+          <span className="absolute left-3 top-2.5 text-gray-400">
+            🔍
+          </span>
 
-          {/* RIGHT ACTIONS */}
-          <div className="flex items-center gap-3">
+          {showDropdown && <SearchDropdown />}
+        </div>
 
-            {/* MOBILE SEARCH ICON */}
+        {/* RIGHT ACTIONS */}
+        <div className="flex items-center gap-6">
+
+          {/* MOBILE SEARCH */}
+          <button
+            className="md:hidden text-xl text-gray-600"
+            onClick={() => setSearchOpen(!searchOpen)}
+          >
+            🔍
+          </button>
+
+          {/* ORDERS */}
+          <button className="hidden md:flex flex-col items-center text-xs text-gray-600 hover:text-primary">
+            <span>📄</span>
+            Orders
+          </button>
+
+          {/* CART */}
+          <button
+            onClick={() => setCartOpen(true)}
+            className="relative flex flex-col items-center text-xs text-gray-600 hover:text-primary"
+          >
+            <span className="text-lg">🛒</span>
+            Cart
+
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 w-5 h-5 text-xs rounded-full flex items-center justify-center bg-accent text-white">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
+          {/* PROFILE */}
+          {!loading && user ? (
+            <div className="relative hidden md:block">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex flex-col items-center text-xs text-gray-600 hover:text-primary"
+              >
+                <span>👤</span>
+                Profile
+              </button>
+
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-xl shadow-lg">
+                  <div className="px-4 py-2 text-xs text-gray-500 border-b">
+                    {user.displayName ?? user.email}
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
             <button
-              className="md:hidden text-xl"
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => router.push("/login")}
+              className="hidden md:flex flex-col items-center text-xs text-gray-600 hover:text-primary"
             >
-              🔍
+              <span>👤</span>
+              Login
             </button>
+          )}
 
-            {/* DESKTOP ALL PRODUCTS */}
-            <Link
-              href="/products"
-              className="hidden md:block text-sm font-medium"
-              style={{ color: "var(--color-primary)" }}
-            >
+          {/* MOBILE MENU */}
+          <button
+            className="md:hidden text-2xl"
+            onClick={() => setMobileMenu(true)}
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE SEARCH */}
+      {searchOpen && (
+        <div className="md:hidden px-4 pb-3 relative">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search medicines..."
+            className="w-full border rounded-xl px-4 py-2"
+          />
+          {showDropdown && <SearchDropdown />}
+        </div>
+      )}
+    </header>
+
+    {/* ================= MOBILE MENU ================= */}
+    {mobileMenu && (
+      <div className="fixed inset-0 bg-black/40 z-50">
+        <div className="absolute right-0 top-0 h-full w-72 bg-white p-6 shadow-lg">
+          <button
+            className="text-xl mb-6"
+            onClick={() => setMobileMenu(false)}
+          >
+            ✕
+          </button>
+
+          <nav className="flex flex-col gap-5 text-sm">
+            {!loading && user && (
+              <span className="font-medium">
+                {user.displayName ?? user.email}
+              </span>
+            )}
+
+            <Link href="/products" onClick={() => setMobileMenu(false)}>
               All Products
             </Link>
 
-            {/* DESKTOP AUTH */}
-            {!loading && user && (
-              <div className="hidden md:block relative">
-                <button
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-sm font-medium"
-                  style={{ color: "var(--color-primary)" }}
-                >
-                  Welcome, {user.displayName ?? user.email?.split("@")[0]} ▾
-                </button>
-
-                {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-36 bg-white border rounded-lg shadow-md">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!loading && !user && (
+            {!loading && user ? (
+              <button onClick={handleLogout}>Logout</button>
+            ) : (
               <button
-                onClick={() => router.push("/login")}
-                className="hidden md:block text-sm font-medium"
-                style={{ color: "var(--color-primary)" }}
+                onClick={() => {
+                  setMobileMenu(false);
+                  router.push("/login");
+                }}
               >
                 Login
               </button>
             )}
-
-            {/* CART */}
-            <button
-              onClick={() => setCartOpen(true)}
-              className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100"
-            >
-              🛒
-              {cartCount > 0 && (
-                <span
-                  className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full flex items-center justify-center text-white"
-                  style={{ backgroundColor: "var(--color-secondary)" }}
-                >
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            {/* HAMBURGER */}
-            <button
-              className="md:hidden text-2xl"
-              onClick={() => setMobileMenu(true)}
-            >
-              ☰
-            </button>
-          </div>
+          </nav>
         </div>
+      </div>
+    )}
 
-        {/* MOBILE SEARCH BAR + RESULTS */}
-        {searchOpen && (
-          <div className="md:hidden px-4 pb-3 relative">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search medicines..."
-              className="w-full border rounded-lg px-4 py-2 text-sm"
-              style={{ borderColor: "var(--color-primary)" }}
-            />
-            {showDropdown && <SearchDropdown />}
-          </div>
-        )}
-      </header>
-
-      {/* ================= MOBILE MENU ================= */}
-      {mobileMenu && (
-        <div className="fixed inset-0 bg-black/40 z-50">
-          <div className="absolute right-0 top-0 h-full w-64 bg-white p-5 shadow-lg">
-            <button
-              className="text-xl mb-6"
-              onClick={() => setMobileMenu(false)}
-            >
-              ✕
-            </button>
-
-            <nav className="flex flex-col gap-4">
-              {!loading && user && (
-                <span className="text-sm font-medium">
-                  Welcome, {user.displayName ?? user.email?.split("@")[0]}
-                </span>
-              )}
-
-              <Link
-                href="/products"
-                onClick={() => setMobileMenu(false)}
-                className="text-sm font-medium"
-              >
-                All Products
-              </Link>
-
-              {!loading && user ? (
-                <button
-                  onClick={handleLogout}
-                  className="text-sm text-left"
-                >
-                  Logout
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenu(false);
-                    router.push("/login");
-                  }}
-                  className="text-sm text-left"
-                >
-                  Login
-                </button>
-              )}
-            </nav>
-          </div>
-        </div>
-      )}
-
-      {/* ================= CART ================= */}
-      <CartSidebar
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-      />
-    </>
-  );
+    {/* ================= CART ================= */}
+    <CartSidebar
+      isOpen={cartOpen}
+      onClose={() => setCartOpen(false)}
+    />
+  </>
+);
 }

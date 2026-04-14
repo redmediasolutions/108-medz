@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "108 medz app",
     "trusted online pharmacy",
   ],
-  metadataBase: new URL("https://108medz.com"),
+  metadataBase: new URL("https://108medz.in"),
   openGraph: {
     title: "108 Medz",
     description:
