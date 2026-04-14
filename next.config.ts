@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* ---------------- IMAGES ---------------- */
   images: {
     remotePatterns: [
       {
@@ -10,12 +9,7 @@ const nextConfig: NextConfig = {
         pathname: "/wp-content/uploads/**",
       },
     ],
-    unoptimized: true, // ✅ IMPORTANT for Cloudflare
-  },
-
-  /* ---------------- EXPERIMENTAL ---------------- */
-  experimental: {
-    runtime: "edge", // ✅ Required for Cloudflare compatibility
+    unoptimized: true, // ✅ keep this
   },
 };
 
